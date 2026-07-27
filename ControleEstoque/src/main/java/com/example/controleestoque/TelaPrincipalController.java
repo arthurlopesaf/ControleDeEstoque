@@ -12,6 +12,8 @@ public class TelaPrincipalController {
 
     private Produto produtoSelecionado;
 
+    private ObservableList<Produto> produtosFiltrados = FXCollections.observableArrayList();
+
     @FXML
     private TextField txtCodigo;
 
@@ -122,9 +124,52 @@ public class TelaPrincipalController {
     }
 
     public void btnExcluir(ActionEvent actionEvent) {
+
+        if (produtoSelecionado == null) {
+
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText("Selecione um produto para excluir");
+            alert.showAndWait();
+
+            return;
+        }
+
+        Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmacao.setHeaderText("Deseja realmente excluir este produto?");
+
+        if (confirmacao.showAndWait().get() == ButtonType.OK) {
+
+            listaProdutos.remove(produtoSelecionado);
+
+            produtoSelecionado = null;
+
+            tbProdutos.refresh();
+
+            limparCampos();
+        }
     }
 
     public void btnPesquisar(ActionEvent actionEvent) {
+
+        String pesquisa = txtPesquisar.getText().toLowerCase();
+
+        produtosFiltrados.clear();
+
+        for (Produto produto : listaProdutos) {
+
+            if (
+                    String.valueOf(produto.getCodigo()).contains(pesquisa) ||
+                            produto.getNome().toLowerCase().contains(pesquisa) ||
+                            produto.getCategoria().toLowerCase().contains(pesquisa)
+            ) {
+
+                produtosFiltrados.add(produto);
+
+            }
+
+        }
+
+        tbProdutos.setItems(produtosFiltrados);
     }
 
     public void btnLimpar(ActionEvent actionEvent) {
