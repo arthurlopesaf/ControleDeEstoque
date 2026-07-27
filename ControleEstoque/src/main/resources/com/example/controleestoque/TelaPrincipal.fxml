@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controleestoque.TelaPrincipalController">
+
+    <children>
+
+        <VBox layoutX="20.0" layoutY="20.0" prefWidth="860.0" spacing="15">
+
+            <Label maxWidth="1.7976931348623157E308" style="-fx-background-color:#1f4e79; -fx-text-fill:white; -fx-font-size:18; -fx-font-weight:bold; -fx-padding:12;" text="SISTEMA DE GERENCIAMENTO DE ESTOQUE" />
+
+            <GridPane hgap="20" vgap="10">
+
+                <columnConstraints>
+                    <ColumnConstraints prefWidth="180" />
+                    <ColumnConstraints prefWidth="220" />
+                    <ColumnConstraints prefWidth="220" />
+                </columnConstraints>
+
+                <Label text="Código" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField fx:id="txtCodigo" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+
+                <Label text="Nome do Produto" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <TextField fx:id="txtNome" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                <Label text="Categoria" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                <ComboBox fx:id="cmbCategoria" prefHeight="25.0" prefWidth="169.0" promptText="Selecione a categoria" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+
+                <Label text="Preço" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <TextField fx:id="txtPreco" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+
+                <Label text="Quantidade" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <TextField fx:id="txtQuantidade" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                <Label text="Pesquisar" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                <TextField fx:id="txtPesquisar" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                <rowConstraints>
+                    <RowConstraints />
+                    <RowConstraints />
+                    <RowConstraints />
+                    <RowConstraints />
+                </rowConstraints>
+
+            </GridPane>
+
+            <HBox spacing="15">
+
+                <Button onAction="#btnAdicionar" prefWidth="110" style="-fx-background-color:#1f4e79; -fx-text-fill:white;" text="Adicionar" />
+
+                <Button onAction="#btnAtualizar" prefWidth="110" style="-fx-background-color:#1f4e79; -fx-text-fill:white;" text="Atualizar" />
+
+                <Button onAction="#btnExcluir" prefWidth="110" style="-fx-background-color:#9c2f2f; -fx-text-fill:white;" text="Excluir" />
+
+                <Button onAction="#btnPesquisar" prefWidth="110" style="-fx-background-color:#1f4e79; -fx-text-fill:white;" text="Pesquisar" />
+
+                <Button onAction="#btnLimpar" prefWidth="110" style="-fx-background-color:#1f4e79; -fx-text-fill:white;" text="Limpar" />
+
+                <Button onAction="#btnSair" prefWidth="110" style="-fx-background-color:#9c2f2f; -fx-text-fill:white;" text="Sair" />
+
+            </HBox>
+
+            <TableView fx:id="tbProdutos" prefHeight="320">
+
+                <columns>
+
+                    <TableColumn fx:id="colCodigo" prefWidth="90" text="Código" />
+
+                    <TableColumn fx:id="colNome" prefWidth="220" text="Nome" />
+
+                    <TableColumn fx:id="colCategoria" prefWidth="150" text="Categoria" />
+
+                    <TableColumn fx:id="colPreco" prefWidth="110" text="Preço" />
+
+                    <TableColumn fx:id="colQuantidade" prefWidth="110" text="Quantidade" />
+
+                    <TableColumn fx:id="colValorEstoque" prefWidth="170" text="Valor em Estoque" />
+
+                </columns>
+
+            </TableView>
+
+        </VBox>
+
+    </children>
+
+</AnchorPane>
