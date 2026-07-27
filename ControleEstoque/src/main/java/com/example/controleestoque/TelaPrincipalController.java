@@ -5,14 +5,12 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 public class TelaPrincipalController {
+
+    private Produto produtoSelecionado;
 
     @FXML
     private TextField txtCodigo;
@@ -73,12 +71,54 @@ public class TelaPrincipalController {
         colQuantidade.setCellValueFactory(new PropertyValueFactory<>("quantidade"));
 
         colValorEstoque.setCellValueFactory(new PropertyValueFactory<>("valorEstoque"));
+
+        tbProdutos.setOnMouseClicked(event -> {
+
+            produtoSelecionado = tbProdutos.getSelectionModel().getSelectedItem();
+
+            if (produtoSelecionado != null) {
+
+                txtCodigo.setText(String.valueOf(produtoSelecionado.getCodigo()));
+                txtNome.setText(produtoSelecionado.getNome());
+                cmbCategoria.setValue(produtoSelecionado.getCategoria());
+                txtPreco.setText(String.valueOf(produtoSelecionado.getPreco()));
+                txtQuantidade.setText(String.valueOf(produtoSelecionado.getQuantidade()));
+            }
+
+        });
     }
 
     public void btnAdicionar(ActionEvent actionEvent) {
+
+        int codigo = Integer.parseInt(txtCodigo.getText());
+        String nome = txtNome.getText();
+        String categoria = cmbCategoria.getValue();
+        double preco = Double.parseDouble(txtPreco.getText());
+        int quantidade = Integer.parseInt(txtQuantidade.getText());
+
+        Produto produto = new Produto(codigo, nome, categoria, preco, quantidade);
+
+        listaProdutos.add(produto);
     }
 
     public void btnAtualizar(ActionEvent actionEvent) {
+
+        if (produtoSelecionado == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText("Selecione um produto");
+            alert.showAndWait();
+
+            return;
+        }
+
+        produtoSelecionado.setNome(txtNome.getText());
+        produtoSelecionado.setCategoria(cmbCategoria.getValue());
+        produtoSelecionado.setPreco(Double.parseDouble(txtPreco.getText()));
+        produtoSelecionado.setQuantidade(Integer.parseInt(txtQuantidade.getText()));
+
+        tbProdutos.refresh();
+
+        limparCampos();
     }
 
     public void btnExcluir(ActionEvent actionEvent) {
@@ -88,9 +128,19 @@ public class TelaPrincipalController {
     }
 
     public void btnLimpar(ActionEvent actionEvent) {
+        limparCampos();
     }
 
     public void btnSair(ActionEvent actionEvent) {
         javafx.application.Platform.exit();
+    }
+
+    private void limparCampos() {
+        txtCodigo.clear();
+        txtNome.clear();
+        txtPreco.clear();
+        txtQuantidade.clear();
+
+        cmbCategoria.setValue(null);
     }
 }
