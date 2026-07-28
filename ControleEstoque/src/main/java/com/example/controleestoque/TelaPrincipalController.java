@@ -92,27 +92,35 @@ public class TelaPrincipalController {
 
     public void btnAdicionar(ActionEvent actionEvent) {
 
-        int codigo = Integer.parseInt(txtCodigo.getText());
-        String nome = txtNome.getText();
-        String categoria = cmbCategoria.getValue();
-        double preco = Double.parseDouble(txtPreco.getText());
-        int quantidade = Integer.parseInt(txtQuantidade.getText());
+        if (!validarCampos(false)) {
+            return;
+        }
 
-        Produto produto = new Produto(codigo, nome, categoria, preco, quantidade);
+        Produto produto = new Produto(
+                Integer.parseInt(txtCodigo.getText()),
+                txtNome.getText(),
+                cmbCategoria.getValue(),
+                Double.parseDouble(txtPreco.getText()),
+                Integer.parseInt(txtQuantidade.getText())
+        );
 
         listaProdutos.add(produto);
+
+        limparCampos();
     }
 
     public void btnAtualizar(ActionEvent actionEvent) {
 
         if (produtoSelecionado == null) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setHeaderText("Selecione um produto");
-            alert.showAndWait();
-
+            mostrarAlerta("Selecione um produto.");
             return;
         }
 
+        if (!validarCampos(true)) {
+            return;
+        }
+
+        produtoSelecionado.setCodigo(Integer.parseInt(txtCodigo.getText()));
         produtoSelecionado.setNome(txtNome.getText());
         produtoSelecionado.setCategoria(cmbCategoria.getValue());
         produtoSelecionado.setPreco(Double.parseDouble(txtPreco.getText()));
@@ -157,19 +165,20 @@ public class TelaPrincipalController {
 
         for (Produto produto : listaProdutos) {
 
-            if (
-                    String.valueOf(produto.getCodigo()).contains(pesquisa) ||
-                            produto.getNome().toLowerCase().contains(pesquisa) ||
-                            produto.getCategoria().toLowerCase().contains(pesquisa)
-            ) {
+            if (String.valueOf(produto.getCodigo()).contains(pesquisa)
+                    || produto.getNome().toLowerCase().contains(pesquisa)
+                    || produto.getCategoria().toLowerCase().contains(pesquisa)) {
 
                 produtosFiltrados.add(produto);
-
             }
-
         }
 
-        tbProdutos.setItems(produtosFiltrados);
+        if (produtosFiltrados.isEmpty()) {
+            mostrarAlerta("Nenhum produto encontrado.");
+            tbProdutos.setItems(listaProdutos);
+        } else {
+            tbProdutos.setItems(produtosFiltrados);
+        }
     }
 
     public void btnLimpar(ActionEvent actionEvent) {
@@ -180,6 +189,13 @@ public class TelaPrincipalController {
         javafx.application.Platform.exit();
     }
 
+    private void mostrarAlerta(String mensagem) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setHeaderText(null);
+        alert.setContentText(mensagem);
+        alert.showAndWait();
+    }
+
     private void limparCampos() {
         txtCodigo.clear();
         txtNome.clear();
@@ -187,5 +203,81 @@ public class TelaPrincipalController {
         txtQuantidade.clear();
 
         cmbCategoria.setValue(null);
+    }
+
+    private boolean validarCampos(boolean atualizando) {
+
+        if (txtCodigo.getText().isBlank()) {
+            mostrarAlerta("O código é obrigatório.");
+            return false;
+        }
+
+        int codigo;
+
+        try {
+            codigo = Integer.parseInt(txtCodigo.getText());
+        } catch (NumberFormatException e) {
+            mostrarAlerta("O código deve conter apenas números.");
+            return false;
+        }
+
+        if (!atualizando) {
+            for (Produto p : listaProdutos) {
+                if (p.getCodigo() == codigo) {
+                    mostrarAlerta("Já existe um produto com este código.");
+                    return false;
+                }
+            }
+        }
+
+        if (txtNome.getText().isBlank()) {
+            mostrarAlerta("O nome é obrigatório.");
+            return false;
+        }
+
+        if (cmbCategoria.getValue() == null) {
+            mostrarAlerta("Selecione uma categoria.");
+            return false;
+        }
+
+        double preco;
+
+        if (txtPreco.getText().isBlank()) {
+            mostrarAlerta("O preço é obrigatório.");
+            return false;
+        }
+
+        try {
+            preco = Double.parseDouble(txtPreco.getText());
+        } catch (NumberFormatException e) {
+            mostrarAlerta("Preço inválido.");
+            return false;
+        }
+
+        if (preco <= 0) {
+            mostrarAlerta("O preço deve ser maior que zero.");
+            return false;
+        }
+
+        int quantidade;
+
+        if (txtQuantidade.getText().isBlank()) {
+            mostrarAlerta("A quantidade é obrigatória.");
+            return false;
+        }
+
+        try {
+            quantidade = Integer.parseInt(txtQuantidade.getText());
+        } catch (NumberFormatException e) {
+            mostrarAlerta("Quantidade inválida.");
+            return false;
+        }
+
+        if (quantidade < 0) {
+            mostrarAlerta("A quantidade não pode ser negativa.");
+            return false;
+        }
+
+        return true;
     }
 }
